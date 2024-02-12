@@ -1,0 +1,53 @@
+syntax = "proto3";
+
+package pb;
+
+message GenNmFunction {
+  string funcID = 1;
+  repeated GenNmVarExpr args = 2;
+  repeated GenNmBasicBlock blocks = 3;
+}
+
+message GenNmBasicBlock {
+  string blockName = 1;
+  bool isTerminate = 5;
+  repeated GenNmExpression exprs = 2;
+  repeated string successors = 3;
+  repeated string predecessors = 4;
+}
+
+message GenNmExpression {
+  oneof expression {
+    GenNmReturnStmt returnStmt = 1;
+    GenNmBranchStmt branchStmt = 2;
+    GenNmCallStmt callStmt = 3;
+    GenNmBasicExpr basicExpr = 4;
+    GenNmImplicitReturnVarExpr implicitReturnVarExpr = 5;
+    GenNmVarExpr varExpr = 6;    
+  }
+  string srcText = 233;
+}
+
+message GenNmReturnStmt { GenNmExpression retVal = 1; }
+
+message GenNmBranchStmt { repeated string successors = 1; }
+
+message GenNmCallStmt {
+  string funcID = 1;
+  repeated GenNmExpression args = 2;
+}
+
+message GenNmBasicExpr {
+  repeated GenNmExpression defs = 1;
+  repeated GenNmExpression uses = 2;
+  bool isDirectUse = 3;
+}
+
+message GenNmImplicitReturnVarExpr{
+  string varName = 1;
+  string funcID = 2;
+}
+
+message GenNmVarExpr {
+  string varName = 1;
+}
